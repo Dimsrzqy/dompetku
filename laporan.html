@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Laporan Keuangan - CatatUang</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-slate-50 font-['Plus_Jakarta_Sans',sans-serif] text-slate-800 antialiased">
+    <!-- Component Containers -->
+    <div id="sidebar-container"></div>
+    <div id="header-container"></div>
+    <div class="sidebar-backdrop" onclick="toggleSidebar()"></div>
+
+    <div class="main-wrapper">
+        <!-- Main Content -->
+        <main class="w-full pt-20 px-6 pb-12 bg-slate-50 min-h-screen">
+            <div class="flex flex-col w-full gap-6">
+                <!-- Ringkasan Saldo (3 Cards) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Pemasukan</span>
+                            <span class="material-symbols-outlined text-emerald-600 text-[20px]">arrow_downward</span>
+                        </div>
+                        <div class="mt-4">
+                            <div id="summary-income" class="text-2xl font-bold text-emerald-600 tracking-tight">Rp 0</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Pengeluaran</span>
+                            <span class="material-symbols-outlined text-rose-600 text-[20px]">arrow_upward</span>
+                        </div>
+                        <div class="mt-4">
+                            <div id="summary-expense" class="text-2xl font-bold text-rose-600 tracking-tight">Rp 0</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-blue-600 to-blue-700 text-white p-5 rounded-2xl shadow-md shadow-blue-500/15 flex flex-col justify-between">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-blue-100">Sisa Saldo Kas</span>
+                            <span class="material-symbols-outlined text-white text-[20px]">account_balance_wallet</span>
+                        </div>
+                        <div class="mt-4">
+                            <div id="summary-balance" class="text-2xl font-bold tracking-tight text-white">Rp 0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section Analisis Laporan Detail -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col gap-6">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900">Analisis Laporan Lengkap</h3>
+                        <p class="text-xs text-slate-400">Statistik visual perbandingan pemasukan & pengeluaran Anda</p>
+                    </div>
+                    <div class="w-full h-80 relative">
+                        <canvas id="financeChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Informasi Tambahan -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+                    <h3 class="text-base font-bold text-slate-900 mb-1">Informasi Integrasi Spreadsheet</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        Laporan ini disinkronkan langsung secara real-time dari Google Spreadsheet Anda. Semua perubahan nominal dan kategori yang diinputkan akan langsung diperbarui dalam statistik dan grafik di atas.
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Profil Pengguna -->
+    <div class="modal" id="configModal">
+        <div class="modal-content">
+            <h3 class="text-lg font-bold text-slate-900">Profil Pengguna</h3>
+            <p class="mt-1 text-slate-500 text-xs">Username yang aktif untuk mencatat & melihat transaksi keuangan Anda.</p>
+            <div class="form-group mt-4">
+                <label for="userInput" class="text-xs font-bold text-slate-700 uppercase">Username Pengguna</label>
+                <input type="text" id="userInput" class="form-control mt-1 text-sm bg-slate-100 text-slate-600 font-semibold cursor-not-allowed" readonly>
+            </div>
+            <div class="modal-actions mt-6 flex items-center justify-end">
+                <button type="button" class="px-5 py-2 rounded-xl text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 shadow-sm" onclick="closeModal()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,334 @@
+/* CatatUang - Global Styles */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Layout: sidebar offset ---- */
+.main-wrapper {
+    padding-left: 16rem; /* matches sidebar w-64 */
+}
+
+/* ---- Modal ---- */
+.modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+.modal.active { display: flex; }
+
+.modal-content {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    width: 90%;
+    max-width: 480px;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.form-control:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* ---- Status dot ---- */
+.connection-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.connection-badge .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background-color: #ef4444;
+}
+.connection-badge .dot.online {
+    background-color: #10b981;
+}
+
+/* ---- Sidebar nav ---- */
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.75rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #475569;
+    transition: all 0.15s;
+    text-decoration: none;
+}
+.nav-item:hover {
+    background-color: #f1f5f9;
+    color: #0f172a;
+}
+.nav-item.active {
+    background-color: #2563eb;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2);
+}
+.nav-item.active:hover {
+    background-color: #1d4ed8;
+    color: #fff;
+}
+
+/* ---- Login overlay ---- */
+.login-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1.25rem;
+    padding: 2rem;
+    width: 90%;
+    max-width: 380px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    text-align: center;
+}
+.login-card h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.25rem;
+}
+.login-card p {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+}
+.login-card input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 600;
+    color: #0f172a;
+}
+.login-card input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+.login-card button {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 0.75rem;
+    background: #2563eb;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.login-card button:hover {
+    background: #1d4ed8;
+}
+.login-card .login-icon {
+    width: 56px; height: 56px;
+    border-radius: 1rem;
+    background: #2563eb;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+/* ---- Hamburger button (hidden on desktop) ---- */
+.hamburger-btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #334155;
+    padding: 0.25rem;
+}
+
+/* ---- Sidebar overlay backdrop (mobile) ---- */
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.35);
+    z-index: 45;
+}
+body.sidebar-open .sidebar-backdrop {
+    display: block;
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 768px) {
+    .main-wrapper {
+        padding-left: 0;
+    }
+
+    /* Sidebar: off-screen by default, slides in */
+    #sidebar-container aside {
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+    }
+    body.sidebar-open #sidebar-container aside {
+        transform: translateX(0);
+    }
+
+    /* Header: full width */
+    #header-container header {
+        left: 0 !important;
+    }
+
+    /* Show hamburger */
+    .hamburger-btn {
+        display: inline-flex;
+    }
+
+    /* Tighter page padding */
+    main {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        padding-top: 5rem !important;
+    }
+}
+
+/* ---- Toast Popup System ---- */
+.toast-container {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 350;
+    pointer-events: none;
+}
+.toast-popup {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.25rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-left-width: 4px;
+    border-radius: 0.875rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0f172a;
+    min-width: 280px;
+    max-width: 420px;
+    animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.25s ease;
+}
+.toast-popup.toast-success {
+    border-left-color: #10b981;
+}
+.toast-popup.toast-success .toast-icon {
+    color: #10b981;
+    background: #ecfdf5;
+}
+.toast-popup.toast-error {
+    border-left-color: #ef4444;
+}
+.toast-popup.toast-error .toast-icon {
+    color: #ef4444;
+    background: #fef2f2;
+}
+.toast-popup.toast-info {
+    border-left-color: #2563eb;
+}
+.toast-popup.toast-info .toast-icon {
+    color: #2563eb;
+    background: #eff6ff;
+}
+.toast-popup .toast-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.toast-popup.toast-out {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+}
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 640px) {
+    .toast-container {
+        left: 1rem; right: 1rem; bottom: 1rem;
+    }
+    .toast-popup {
+        min-width: 0; width: 100%;
+    }
+}
+
+/* Custom Confirm Modal */
+.confirm-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 250;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: fadeIn 0.15s ease;
+}
+.confirm-modal-card {
+    background: #fff;
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+

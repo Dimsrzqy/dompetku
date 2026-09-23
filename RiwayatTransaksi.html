@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Riwayat Transaksi - CatatUang</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-slate-50 font-['Plus_Jakarta_Sans',sans-serif] text-slate-800 antialiased">
+    <!-- Component Containers -->
+    <div id="sidebar-container"></div>
+    <div id="header-container"></div>
+    <div class="sidebar-backdrop" onclick="toggleSidebar()"></div>
+
+    <div class="main-wrapper">
+        <!-- Main Content -->
+        <main class="w-full pt-20 px-6 pb-12 bg-slate-50 min-h-screen">
+            <div class="flex flex-col w-full gap-6">
+                
+                <!-- Ringkasan Singkat (3 Cards) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Pemasukan</span>
+                            <span id="totalIncome" class="text-xl font-bold text-emerald-600 mt-1 tracking-tight">Rp 0</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Pengeluaran</span>
+                            <span id="totalExpense" class="text-xl font-bold text-rose-600 mt-1 tracking-tight">Rp 0</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Sisa Saldo Kas</span>
+                            <span id="netBalance" class="text-xl font-bold text-slate-900 mt-1 tracking-tight">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Control Bar (Filter & Search) -->
+                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl w-full md:w-auto">
+                        <button class="type-pill px-4 py-2 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-sm transition-all" id="tab-all" onclick="filterType('all')">Semua</button>
+                        <button class="type-pill px-4 py-2 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-900 transition-all" id="tab-income" onclick="filterType('in')">Pemasukan</button>
+                        <button class="type-pill px-4 py-2 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-900 transition-all" id="tab-expense" onclick="filterType('out')">Pengeluaran</button>
+                    </div>
+                    <div class="w-full md:w-72 flex items-center gap-2 px-3.5 py-2 bg-slate-100 rounded-xl">
+                        <span class="material-symbols-outlined text-slate-400 text-[18px]">search</span>
+                        <input class="w-full bg-transparent border-none outline-none text-xs text-slate-800 placeholder:text-slate-400" id="search-input" onkeyup="handleSearch()" placeholder="Cari transaksi..." type="text">
+                    </div>
+                </div>
+
+                <!-- Tabel Riwayat Mutasi -->
+                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden flex flex-col">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-slate-50 text-slate-400 text-xs uppercase tracking-wider font-semibold border-b border-slate-100">
+                                <tr>
+                                    <th class="py-3 px-6 whitespace-nowrap">Tanggal</th>
+                                    <th class="py-3 px-4 whitespace-nowrap">Keterangan</th>
+                                    <th class="py-3 px-4 whitespace-nowrap">Kategori</th>
+                                    <th class="py-3 px-4 whitespace-nowrap">Sumber</th>
+                                    <th class="py-3 px-4 whitespace-nowrap">Tipe</th>
+                                    <th class="py-3 px-6 text-right whitespace-nowrap">Nominal</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 text-sm" id="transaction-rows">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Profil Pengguna -->
+    <div class="modal" id="configModal">
+        <div class="modal-content">
+            <h3 class="text-lg font-bold text-slate-900">Profil Pengguna</h3>
+            <p class="mt-1 text-slate-500 text-xs">Username yang aktif untuk mencatat & melihat transaksi keuangan Anda.</p>
+            <div class="form-group mt-4">
+                <label for="userInput" class="text-xs font-bold text-slate-700 uppercase">Username Pengguna</label>
+                <input type="text" id="userInput" class="form-control mt-1 text-sm bg-slate-100 text-slate-600 font-semibold cursor-not-allowed" readonly>
+            </div>
+            <div class="modal-actions mt-6 flex items-center justify-end">
+                <button type="button" class="px-5 py-2 rounded-xl text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 shadow-sm" onclick="closeModal()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        function filterType(type) {
+            const tabs = document.querySelectorAll('.type-pill');
+            tabs.forEach(t => {
+                t.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+                t.classList.add('text-slate-500');
+            });
+
+            if(type === 'all') {
+                document.getElementById('tab-all').classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+                document.getElementById('tab-all').classList.remove('text-slate-500');
+            } else if(type === 'in') {
+                document.getElementById('tab-income').classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+                document.getElementById('tab-income').classList.remove('text-slate-500');
+            } else if(type === 'out') {
+                document.getElementById('tab-expense').classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+                document.getElementById('tab-expense').classList.remove('text-slate-500');
+            }
+
+            const rows = document.querySelectorAll('#transaction-rows tr');
+            rows.forEach(r => {
+                if (r.getAttribute('data-type')) {
+                    if(type === 'all' || r.getAttribute('data-type') === type) {
+                        r.classList.remove('hidden');
+                    } else {
+                        r.classList.add('hidden');
+                    }
+                }
+            });
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const rows = document.querySelectorAll('#transaction-rows tr');
+            rows.forEach(r => {
+                const text = r.innerText.toLowerCase();
+                if(text.includes(query)) {
+                    r.classList.remove('hidden');
+                } else {
+                    r.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

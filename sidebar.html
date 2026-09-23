@@ -1,0 +1,58 @@
+<aside class="fixed left-0 top-0 h-full w-64 bg-white border-r border-slate-200 z-50 flex flex-col justify-between p-5 shadow-sm">
+    <div class="flex flex-col gap-6">
+        <!-- Brand Logo & Title -->
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3 px-1">
+                <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+                    <span class="material-symbols-outlined text-[24px]">account_balance_wallet</span>
+                </div>
+                <div>
+                    <h1 class="font-bold text-slate-900 text-lg tracking-tight leading-none">CatatUang</h1>
+                    <span class="text-[11px] font-medium text-slate-400">Keuangan Modern</span>
+                </div>
+            </div>
+            <!-- Close button (mobile only, hidden on desktop via CSS) -->
+            <button class="hamburger-btn" onclick="toggleSidebar()">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+            </button>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="flex flex-col gap-1.5">
+            <span class="px-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">NAVIGASI</span>
+            <nav class="flex flex-col gap-1">
+                <a id="nav-index" class="nav-item" href="index.html">
+                    <span class="material-symbols-outlined text-[20px]">grid_view</span>
+                    <span>Ringkasan</span>
+                </a>
+                <a id="nav-input" class="nav-item" href="input%20transaksi.html">
+                    <span class="material-symbols-outlined text-[20px]">add_circle</span>
+                    <span>Input Transaksi</span>
+                </a>
+                <a id="nav-riwayat" class="nav-item" href="RiwayatTransaksi.html">
+                    <span class="material-symbols-outlined text-[20px]">receipt_long</span>
+                    <span>Riwayat Transaksi</span>
+                </a>
+                <a id="nav-laporan" class="nav-item" href="laporan.html">
+                    <span class="material-symbols-outlined text-[20px]">analytics</span>
+                    <span>Laporan</span>
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Bottom: Logout -->
+    <div class="flex flex-col gap-3">
+        <div class="bg-slate-50 border border-slate-100 p-4 rounded-2xl flex flex-col gap-1.5">
+            <div class="flex items-center gap-2 text-slate-700 font-semibold text-xs">
+                <span class="material-symbols-outlined text-blue-600 text-[18px]">cloud_done</span>
+                <span>Google Spreadsheet</span>
+            </div>
+            <p class="text-[12px] text-slate-500 leading-snug">Tersimpan otomatis ke cloud.</p>
+        </div>
+        <button onclick="logout()" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-all text-sm font-medium w-full">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
+            <span>Keluar</span>
+        </button>
+    </div>
+</aside>
