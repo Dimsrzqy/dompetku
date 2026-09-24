@@ -1,15 +1,15 @@
-// CatatUang — Global App Logic
 let currentType = 'pemasukan';
-let selectedCategory = 'Gaji Utama';
-let transactions = [];
+let selectedCategory = 'Kiriman Ortu';
 const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbyCmuIDrz4KiE4fGA_0OgXX2I7QNgkkNc8Llq5LoR1CvTVp0eNbcjgh6djrfUSPZWDV_g/exec';
 let apiUrl = localStorage.getItem('MY_DOMPET_API_URL') || DEFAULT_API_URL;
 let currentUser = localStorage.getItem('MY_DOMPET_USER') || '';
+let transactions = JSON.parse(localStorage.getItem(`MY_DOMPET_TX_${currentUser}`) || '[]');
 
 let financeChartInstance = null;
 let doughnutChartInstance = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
+  initSidebarState();
   // If no username, show login screen first
   if (!currentUser) {
     showLoginScreen();
@@ -41,6 +41,20 @@ async function initApp() {
       handleSubmitTransaction();
     });
   }
+
+  // Handle navbar glass effect on scroll
+  window.addEventListener('scroll', () => {
+    const header = document.getElementById('main-header');
+    if (header) {
+      if (window.scrollY > 10) {
+        header.classList.add('bg-white/70', 'backdrop-blur-md', 'shadow-sm');
+        header.classList.remove('bg-white', 'shadow-none');
+      } else {
+        header.classList.add('bg-white', 'shadow-none');
+        header.classList.remove('bg-white/70', 'backdrop-blur-md', 'shadow-sm');
+      }
+    }
+  });
 }
 
 // ---- Login Screen ----
@@ -53,7 +67,7 @@ function showLoginScreen() {
       <div class="login-icon">
         <span class="material-symbols-outlined" style="font-size:28px">account_balance_wallet</span>
       </div>
-      <h1>CatatUang</h1>
+      <h1>DompetKu</h1>
       <p>Masukkan username untuk mulai mencatat keuangan Anda</p>
       <form id="loginForm">
         <input type="text" id="loginUsername" placeholder="Username Anda" autocomplete="off" required>
@@ -71,6 +85,7 @@ function showLoginScreen() {
 
     currentUser = name;
     localStorage.setItem('MY_DOMPET_USER', currentUser);
+    transactions = JSON.parse(localStorage.getItem(`MY_DOMPET_TX_${currentUser}`) || '[]');
 
     overlay.remove();
     showNotification(`Selamat datang kembali, ${currentUser}!`, 'success');
@@ -103,6 +118,7 @@ async function loadComponents() {
   highlightActiveNav();
   setPageTitle();
   updateConnectionStatus();
+  updateMinimizeIcon();
 }
 
 function highlightActiveNav() {
@@ -113,8 +129,6 @@ function highlightActiveNav() {
     activeId = 'nav-input';
   } else if (path.includes('riwayat')) {
     activeId = 'nav-riwayat';
-  } else if (path.includes('laporan')) {
-    activeId = 'nav-laporan';
   }
 
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -132,16 +146,48 @@ function setPageTitle() {
     titleEl.textContent = 'Tambah Transaksi Baru';
   } else if (path.includes('riwayat')) {
     titleEl.textContent = 'Riwayat Transaksi';
-  } else if (path.includes('laporan')) {
-    titleEl.textContent = 'Laporan Keuangan';
   } else {
-    titleEl.textContent = 'Dashboard Ringkasan';
+    titleEl.textContent = 'Dashboard';
   }
 }
 
-// ---- Mobile Sidebar Toggle ----
+// ---- Sidebar Minimize (Desktop) & Mobile Toggle ----
+function toggleSidebarMinimize() {
+  document.body.classList.toggle('sidebar-minimized');
+  const isMinimized = document.body.classList.contains('sidebar-minimized');
+  localStorage.setItem('MY_DOMPET_SIDEBAR_MIN', isMinimized ? 'true' : 'false');
+  updateMinimizeIcon();
+}
+
+function initSidebarState() {
+  if (localStorage.getItem('MY_DOMPET_SIDEBAR_MIN') === 'true') {
+    document.body.classList.add('sidebar-minimized');
+  } else {
+    document.body.classList.remove('sidebar-minimized');
+  }
+}
+
+function updateMinimizeIcon() {
+  const icon = document.getElementById('sidebar-minimize-icon');
+  const btn = document.getElementById('sidebar-minimize-btn');
+  if (icon) {
+    const isMinimized = document.body.classList.contains('sidebar-minimized');
+    icon.textContent = isMinimized ? 'dock_to_right' : 'dock_to_left';
+    if (btn) {
+      btn.title = isMinimized ? 'Perluas Sidebar' : 'Perkecil Sidebar';
+    }
+  }
+}
+
 function toggleSidebar() {
   document.body.classList.toggle('sidebar-open');
+}
+
+function setQuickAmount(val) {
+  const input = document.getElementById('amount');
+  if (input) {
+    input.value = new Intl.NumberFormat('id-ID').format(val);
+  }
 }
 
 // ---- Category selection ----
@@ -150,12 +196,19 @@ function selectCategory(btnElement, categoryName) {
   const labelEl = document.getElementById('selected-category-name');
   if (labelEl) labelEl.textContent = categoryName;
 
+  const badge = document.getElementById('category-badge');
+  if (badge) {
+    badge.classList.remove('animate-badge');
+    void badge.offsetWidth; // Trigger reflow to restart animation
+    badge.classList.add('animate-badge');
+  }
+
   document.querySelectorAll('.category-btn').forEach(btn => {
-    btn.className = 'category-btn flex flex-col items-center justify-center p-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all gap-1 text-xs font-semibold';
+    btn.className = 'category-btn flex flex-col items-center justify-center p-3.5 rounded-xl bg-white hover:bg-slate-100/90 text-slate-600 border border-slate-200/80 shadow-xs gap-1.5 text-xs font-semibold';
   });
 
   if (btnElement) {
-    btnElement.className = 'category-btn flex flex-col items-center justify-center p-3 rounded-xl bg-blue-600 text-white transition-all shadow-sm gap-1 text-xs font-semibold';
+    btnElement.className = 'category-btn is-active flex flex-col items-center justify-center p-3.5 rounded-xl bg-blue-500 border border-blue-500 text-white shadow-md shadow-blue-500/25 gap-1.5 text-xs font-semibold';
   }
 }
 
@@ -194,12 +247,24 @@ async function loadTransactions() {
     return;
   }
 
+  // Tampilkan dari cache agar instan (Optimistic UI)
+  if (transactions.length > 0) renderApp();
+
+  const now = Date.now();
+  const lastSync = sessionStorage.getItem(`MY_DOMPET_LAST_SYNC_${currentUser}`);
+  // Cegah request bertubi-tubi ke server jika baru saja reload (throttle 3 detik)
+  if (lastSync && (now - parseInt(lastSync) < 3000)) {
+    return;
+  }
+  sessionStorage.setItem(`MY_DOMPET_LAST_SYNC_${currentUser}`, now.toString());
+
   try {
     const cacheBuster = `_t=${Date.now()}`;
     const res = await fetch(`${apiUrl}?user=${encodeURIComponent(currentUser)}&${cacheBuster}`);
     const result = await res.json();
     if (result.status === 'success' && Array.isArray(result.data)) {
       transactions = result.data;
+      localStorage.setItem(`MY_DOMPET_TX_${currentUser}`, JSON.stringify(transactions));
     }
   } catch (err) {
     console.warn('Gagal mengambil data:', err);
@@ -240,24 +305,27 @@ function showNotification(message, type = 'info', duration = 3500) {
   }, duration);
 }
 
-function showConfirmModal(title, message, onConfirm) {
+function showConfirmModal(title, message, onConfirm, confirmText = 'Lanjutkan', icon = 'warning') {
   const overlay = document.createElement('div');
   overlay.className = 'confirm-modal-overlay';
   overlay.innerHTML = `
     <div class="confirm-modal-card">
       <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-3">
-        <span class="material-symbols-outlined" style="font-size:26px">warning</span>
+        <span class="material-symbols-outlined" style="font-size:26px">${icon}</span>
       </div>
       <h3 class="font-bold text-slate-900 text-base mb-1">${title}</h3>
       <p class="text-xs text-slate-500 mb-5 leading-relaxed">${message}</p>
       <div class="flex gap-2.5">
         <button id="cancelConfirmBtn" class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold text-xs hover:bg-slate-50 transition-colors">Batal</button>
-        <button id="okConfirmBtn" class="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs shadow-sm transition-colors">Hapus</button>
+        <button id="okConfirmBtn" class="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs shadow-sm transition-colors">${confirmText}</button>
       </div>
     </div>
   `;
   document.body.appendChild(overlay);
 
+  overlay.onclick = (e) => {
+    if (e.target === overlay) overlay.remove();
+  };
   overlay.querySelector('#cancelConfirmBtn').onclick = () => overlay.remove();
   overlay.querySelector('#okConfirmBtn').onclick = () => {
     overlay.remove();
@@ -303,6 +371,7 @@ async function handleSubmitTransaction() {
 
   // 1. Update UI secara INSTAN (Optimistic Update)
   transactions.push(newTx);
+  localStorage.setItem(`MY_DOMPET_TX_${currentUser}`, JSON.stringify(transactions));
   renderApp();
 
   showNotification('Transaksi berhasil disimpan!', 'success');
@@ -326,6 +395,7 @@ async function handleSubmitTransaction() {
 
     // Refresh sync background setelah 800ms
     await new Promise(res => setTimeout(res, 800));
+    sessionStorage.removeItem(`MY_DOMPET_LAST_SYNC_${currentUser}`); // bypass throttle
     await loadTransactions();
   } catch (err) {
     console.error('Gagal sync backend:', err);
@@ -366,6 +436,7 @@ async function deleteTransaction(id) {
   showConfirmModal('Hapus Transaksi', 'Apakah Anda yakin ingin menghapus transaksi ini dari catatan?', async () => {
     // 1. Update UI secara INSTAN (Optimistic Delete)
     transactions = transactions.filter(t => String(t.id) !== String(id));
+    localStorage.setItem(`MY_DOMPET_TX_${currentUser}`, JSON.stringify(transactions));
     renderApp();
     showNotification('Transaksi berhasil dihapus', 'info');
 
@@ -386,12 +457,13 @@ async function deleteTransaction(id) {
       }
 
       await new Promise(res => setTimeout(res, 800));
+      sessionStorage.removeItem(`MY_DOMPET_LAST_SYNC_${currentUser}`); // bypass throttle
       await loadTransactions();
     } catch (err) {
       console.error('Gagal menghapus:', err);
       showNotification('Gagal menghapus dari Google Sheets', 'error');
     }
-  });
+  }, 'Hapus', 'delete');
 }
 
 // ---- Render App ----
@@ -606,6 +678,7 @@ function saveApiUrl() {
   if (userInput) {
     currentUser = userInput.value.trim().toLowerCase();
     localStorage.setItem('MY_DOMPET_USER', currentUser);
+    transactions = JSON.parse(localStorage.getItem(`MY_DOMPET_TX_${currentUser}`) || '[]');
   }
 
   updateConnectionStatus();
@@ -616,7 +689,15 @@ function saveApiUrl() {
 
 // ---- Logout ----
 function logout() {
-  localStorage.removeItem('MY_DOMPET_USER');
-  currentUser = '';
-  window.location.reload();
+  showConfirmModal(
+    'Konfirmasi Keluar',
+    'Apakah Anda yakin ingin keluar dari akun DompetKu?',
+    () => {
+      localStorage.removeItem('MY_DOMPET_USER');
+      currentUser = '';
+      window.location.reload();
+    },
+    'Keluar',
+    'logout'
+  );
 }

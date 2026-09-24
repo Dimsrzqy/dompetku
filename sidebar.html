@@ -1,58 +1,66 @@
-<aside class="fixed left-0 top-0 h-full w-64 bg-white border-r border-slate-200 z-50 flex flex-col justify-between p-5 shadow-sm">
+<aside id="main-sidebar" class="fixed left-0 top-0 h-full w-64 bg-white border-r border-slate-200/90 z-50 flex flex-col justify-between p-5 shadow-sm">
     <div class="flex flex-col gap-6">
-        <!-- Brand Logo & Title -->
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3 px-1">
-                <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
-                    <span class="material-symbols-outlined text-[24px]">account_balance_wallet</span>
+        <!-- Brand Logo, Title & Minimize Toggle -->
+        <div class="sidebar-header-row flex items-center justify-between pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-3 overflow-hidden">
+                <div class="w-10 h-10 min-w-[2.5rem] rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 shrink-0">
+                    <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
                 </div>
-                <div>
-                    <h1 class="font-bold text-slate-900 text-lg tracking-tight leading-none">CatatUang</h1>
-                    <span class="text-[11px] font-medium text-slate-400">Keuangan Modern</span>
+                <div class="sidebar-brand-text flex flex-col justify-center gap-0.5 whitespace-nowrap overflow-hidden">
+                    <h1 class="font-extrabold text-slate-900 text-[18px] tracking-tight leading-tight">DompetKu</h1>
+                    <span class="text-[11px] font-medium text-slate-400 leading-none">Dompet Anak Kost</span>
                 </div>
             </div>
-            <!-- Close button (mobile only, hidden on desktop via CSS) -->
-            <button class="hamburger-btn" onclick="toggleSidebar()">
-                <span class="material-symbols-outlined text-[20px]">close</span>
-            </button>
+            <!-- Desktop Minimize / Mobile Close -->
+            <div class="flex items-center">
+                <button id="sidebar-minimize-btn" class="hidden md:flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 border border-slate-200/70 transition-all" onclick="toggleSidebarMinimize()" title="Perkecil Sidebar">
+                    <span id="sidebar-minimize-icon" class="material-symbols-outlined text-[19px]">dock_to_left</span>
+                </button>
+                <button class="hamburger-btn md:hidden" onclick="toggleSidebar()">
+                    <span class="material-symbols-outlined text-[20px]">close</span>
+                </button>
+            </div>
         </div>
 
         <!-- Navigation Links -->
-        <div class="flex flex-col gap-1.5">
-            <span class="px-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">NAVIGASI</span>
-            <nav class="flex flex-col gap-1">
-                <a id="nav-index" class="nav-item" href="index.html">
-                    <span class="material-symbols-outlined text-[20px]">grid_view</span>
-                    <span>Ringkasan</span>
+        <div class="flex flex-col gap-2">
+            <span class="sidebar-section-title px-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Menu Utama</span>
+            <nav class="flex flex-col gap-1.5">
+                <a id="nav-index" class="nav-item group" href="index.html" title="Dashboard">
+                    <span class="material-symbols-outlined text-[20px] shrink-0 transition-transform group-hover:scale-105">space_dashboard</span>
+                    <span class="nav-label whitespace-nowrap">Dashboard</span>
                 </a>
-                <a id="nav-input" class="nav-item" href="input%20transaksi.html">
-                    <span class="material-symbols-outlined text-[20px]">add_circle</span>
-                    <span>Input Transaksi</span>
+                <a id="nav-input" class="nav-item group" href="input%20transaksi.html" title="Input Transaksi">
+                    <span class="material-symbols-outlined text-[20px] shrink-0 transition-transform group-hover:scale-105">add_circle</span>
+                    <span class="nav-label whitespace-nowrap">Input Transaksi</span>
                 </a>
-                <a id="nav-riwayat" class="nav-item" href="RiwayatTransaksi.html">
-                    <span class="material-symbols-outlined text-[20px]">receipt_long</span>
-                    <span>Riwayat Transaksi</span>
-                </a>
-                <a id="nav-laporan" class="nav-item" href="laporan.html">
-                    <span class="material-symbols-outlined text-[20px]">analytics</span>
-                    <span>Laporan</span>
+                <a id="nav-riwayat" class="nav-item group" href="RiwayatTransaksi.html" title="Riwayat Transaksi">
+                    <span class="material-symbols-outlined text-[20px] shrink-0 transition-transform group-hover:scale-105">receipt_long</span>
+                    <span class="nav-label whitespace-nowrap">Riwayat Transaksi</span>
                 </a>
             </nav>
         </div>
     </div>
 
-    <!-- Bottom: Logout -->
-    <div class="flex flex-col gap-3">
-        <div class="bg-slate-50 border border-slate-100 p-4 rounded-2xl flex flex-col gap-1.5">
-            <div class="flex items-center gap-2 text-slate-700 font-semibold text-xs">
-                <span class="material-symbols-outlined text-blue-600 text-[18px]">cloud_done</span>
-                <span>Google Spreadsheet</span>
+    <!-- Bottom Profile & Logout -->
+    <div class="flex flex-col gap-3 pt-3 border-t border-slate-100">
+        <!-- Cloud Sync Info -->
+        <div class="sidebar-cloud-info bg-slate-50 border border-slate-200/70 p-3 rounded-xl flex items-center justify-between">
+            <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[17px]">cloud_sync</span>
+                </div>
+                <div class="flex flex-col min-w-0 leading-tight">
+                    <span class="text-[11px] font-bold text-slate-700 truncate">Google Sheets</span>
+                    <span class="text-[10px] text-slate-400 font-medium truncate">Tersimpan Otomatis</span>
+                </div>
             </div>
-            <p class="text-[12px] text-slate-500 leading-snug">Tersimpan otomatis ke cloud.</p>
         </div>
-        <button onclick="logout()" class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-all text-sm font-medium w-full">
-            <span class="material-symbols-outlined text-[20px]">logout</span>
-            <span>Keluar</span>
+        
+        <!-- Logout Button -->
+        <button onclick="logout()" class="nav-item-logout flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-rose-50 hover:text-rose-600 border border-transparent hover:border-rose-100 transition-all text-xs font-semibold w-full" title="Keluar">
+            <span class="material-symbols-outlined text-[19px] shrink-0">logout</span>
+            <span class="nav-label whitespace-nowrap">Keluar</span>
         </button>
     </div>
 </aside>
