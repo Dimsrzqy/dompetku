@@ -568,8 +568,8 @@ function renderHistoryTable(isConnected) {
         </span>
       </td>
       <td class="py-3 px-4 md:px-6 text-right whitespace-nowrap font-bold ${isIncome ? 'text-emerald-600' : 'text-rose-600'}">
-        ${isIncome ? '+' : '-'}${formatRupiah(t.nominal)}
-        <button class="ml-2 text-slate-400 hover:text-rose-600 transition-colors align-middle" onclick="deleteTransaction('${t.id}')" title="Hapus">
+        <span>${isIncome ? '+' : '-'}${formatRupiah(t.nominal)}</span>
+        <button class="ml-1.5 text-slate-400 hover:text-rose-600 transition-colors inline-flex items-center align-middle" onclick="deleteTransaction('${t.id}')" title="Hapus">
           <span class="material-symbols-outlined text-[16px]">delete</span>
         </button>
       </td>`;
